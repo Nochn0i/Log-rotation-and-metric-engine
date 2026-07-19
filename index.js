@@ -1,14 +1,15 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { cldd, galf, fllf, cc, clf } from "./utils.js";
-
+import { render_file } from "./utils.js";
+import router from "./route.js";
+import { port } from "./config.js";
 const app = express();
-const port = 4000;
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+app.use("/api", router);
 
 // finalize app
 const finalize_app = () => {
@@ -33,10 +34,7 @@ const finalize_app = () => {
 // start server
 async function start_app() {
   try {
-    await cldd();
-    const latest_file = await fllf();
-    await cc(latest_file);
-    await clf(latest_file);
+    await render_file();
     finalize_app();
 
     app.listen(port, () => console.log(`Server listening on port:4000.`));

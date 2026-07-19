@@ -50,28 +50,26 @@ export const fllf = async () => {
   return `app.${highestNum}.log`;
 };
 
-// get latest file from config.json
-export const glfc = async () => {
-  try {
-    const config_content = JSON.parse(await fsp.readFile(__config));
-    const { current_file } = config_content;
-    return current_file;
-  } catch (e) {
-    console.error(
-      "Error getting lastest file from config.json. Err:",
-      e.message,
-    );
-    throw e;
-  }
-};
-
 // create log file if doesn't exist.
 export const clf = async (file_name) => {
   try {
     const file_path = path.join(__logdir, file_name);
-    if (!fs.existsSync(file_path)) await fsp.writeFile(file_path, "[]");
+    if (!fs.existsSync(file_path)) await fsp.writeFile(file_path, "");
   } catch (e) {
     console.error("Error creating log file. Err:", e.message);
+    throw e;
+  }
+};
+
+// render file
+export const render_file = async () => {
+  try {
+    await cldd();
+    const latest_file = await fllf();
+    await cc(latest_file);
+    await clf(latest_file);
+  } catch (e) {
+    console.error("Error rendering file. Err:", e.message);
     throw e;
   }
 };
